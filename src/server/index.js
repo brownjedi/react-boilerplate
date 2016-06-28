@@ -4,9 +4,9 @@ import bodyParser from 'body-parser'
 import logger     from 'morgan'
 import apiRoutes  from './routes/apiRoutes'
 
-const app  = express()
-const port = process.env.SERVER_PORT || process.env.PORT || 3000
-const host = process.env.SERVER_HOST || process.env.HOST || 'localhost'
+const app     = express()
+const port    = process.env.PORT || process.env.SERVER_PORT || 3000
+const host    = process.env.HOST || process.env.SERVER_HOST || 'localhost'
 
 app.use(logger('dev'))
 app.use(bodyParser.json())

@@ -2,6 +2,7 @@ import React            from 'react'
 import { render }       from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 import App              from './components/App'
+import './app.global.scss'
 
 // Get the DOM Element that will host our React application.
 const container = document.getElementById('root')

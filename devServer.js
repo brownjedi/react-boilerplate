@@ -27,8 +27,8 @@ const wdm      = webpackDevMiddleware(compiler, {
 	}
 })
 
-app.use(wdm)
 // compiler.watch({}, () => {})
+app.use(wdm)
 app.use(webpackHotMiddleware(compiler))
 app.use(express.static(config.output.path))
 app.get('*', (req, res) => {

@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "eslint": "eslint .",
     "clean": "rimraf dist",
-    "dev": "npm run clean && node devServer",
+    "dev": "npm run clean && NODE_ENV=development node devServer",
     "build": "npm run clean && cross-env NODE_ENV=production webpack --config webpack.production.config.js --progress --profile"
   },
   "keywords": [
@@ -26,6 +26,7 @@
     "babel-loader": "^6.2.4",
     "babel-preset-es2015-webpack": "^6.4.1",
     "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
     "cross-env": "^1.0.8",
     "css-loader": "^0.23.1",

@@ -1,12 +1,14 @@
-const path              = require('path')
-const webpack           = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const StatsPlugin       = require('stats-webpack-plugin')
-const autoprefixer      = require('autoprefixer')
-const validate          = require('webpack-validator')
 
 require('dotenv').config({ silent: true })
+
+const path                    = require('path')
+const webpack                 = require('webpack')
+const HtmlWebpackPlugin       = require('html-webpack-plugin')
+const ExtractTextPlugin       = require('extract-text-webpack-plugin')
+const StatsPlugin             = require('stats-webpack-plugin')
+const autoprefixer            = require('autoprefixer')
+const validate                = require('webpack-validator')
+const { preLoaders, loaders } = require('./webpack.loaders.js')
 
 module.exports = validate({
 	target: 'web',
@@ -25,6 +27,9 @@ module.exports = validate({
 		filename: '[name]-[hash].min.js',
 		chunkFilename: '[name]-[chunkhash].min.js',
 		publicPath: '/'
+	},
+	resolve: {
+		extensions: ['', '.js', '.jsx']
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
@@ -65,39 +70,8 @@ module.exports = validate({
 		})
 	],
 	module: {
-		preLoaders: [
-			{
-				test: /\.js?$/,
-				loader: 'eslint',
-				exclude: [/node_modules/, path.resolve(__dirname, 'dist')]
-			}
-		],
-		loaders: [
-			{
-				test: /\.js$/,
-				loader: 'babel',
-				exclude: [/node_modules/, path.resolve(__dirname, 'dist')],
-				query: {
-					presets: ['react', 'es2015-webpack']
-				}
-			}, {
-				test: /\.json?$/,
-				loader: 'json'
-			}, {
-				test: /\.css$/,
-				loader: ExtractTextPlugin.extract('style', [
-					'css?modules&localIdentName=[name]---[local]---[hash:base64:5]',
-					'postcss'
-				])
-			}, {
-				test: /\.(scss|sass)$/,
-				loader: ExtractTextPlugin.extract('style', [
-					'css?modules&localIdentName=[name]---[local]---[hash:base64:5]',
-					'postcss',
-					'sass'
-				])
-			}
-		]
+		preLoaders,
+		loaders
 	},
 	eslint: {
 		failOnWarning: false,

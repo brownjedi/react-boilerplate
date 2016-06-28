@@ -1,5 +1,6 @@
 import React from 'react'
+import './App.scss'
 
 export default () => (
-	<div>Hello World</div>
+	<h4>Hello World</h4>
 )
