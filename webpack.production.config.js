@@ -8,7 +8,6 @@ const ExtractTextPlugin       = require('extract-text-webpack-plugin')
 const StatsPlugin             = require('stats-webpack-plugin')
 const autoprefixer            = require('autoprefixer')
 const validate                = require('webpack-validator')
-const { preLoaders, loaders } = require('./webpack.loaders.js')
 
 module.exports = validate({
 	target: 'web',
@@ -70,8 +69,60 @@ module.exports = validate({
 		})
 	],
 	module: {
-		preLoaders,
-		loaders
+		preLoaders: [
+			// eslint
+			{
+				test: /\.js?$/,
+				loader: 'eslint',
+				exclude: [/node_modules/, path.resolve(__dirname, 'dist')]
+			}
+		],
+		loaders: [
+			// Javascript
+			{
+				test: /\.js$/,
+				loader: 'babel',
+				exclude: [/node_modules/, path.resolve(__dirname, 'dist')],
+				query: {
+					presets: ['react', 'es2015-webpack']
+				}
+			},
+			// JSON
+			{
+				test: /\.json?$/,
+				loader: 'json'
+			},
+			// CSS
+			{
+				test: /\.global\.css$/,
+				loader: ExtractTextPlugin.extract('style', [
+					'css',
+					'postcss'
+				])
+			}, {
+				test: /^((?!\.global).)*\.css$/,
+				loader: ExtractTextPlugin.extract('style', [
+					'css?modules&importLoaders=1&localIdentName=[name]---[local]---[hash:base64:5]',
+					'postcss'
+				])
+			},
+			// SCSS
+			{
+				test: /\.global\.(scss|sass)$/,
+				loader: ExtractTextPlugin.extract('style', [
+					'css',
+					'postcss',
+					'sass'
+				])
+			}, {
+				test: /^((?!\.global).)*\.(scss|sass)$/,
+				loader: ExtractTextPlugin.extract('style', [
+					'css?modules&importLoaders=1&localIdentName=[name]---[local]---[hash:base64:5]',
+					'postcss',
+					'sass'
+				])
+			}
+		]
 	},
 	eslint: {
 		failOnWarning: false,
