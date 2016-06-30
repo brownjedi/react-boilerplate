@@ -49,12 +49,7 @@ module.exports = validate({
 			minChunks: Infinity
 		}),
 		new ExtractTextPlugin('[name]-[hash].min.css'),
-		new webpack.optimize.UglifyJsPlugin({
-			compressor: {
-				warnings: false,
-				screw_ie8: true
-			}
-		}),
+		// Adds options to all of our loaders.
 		new webpack.LoaderOptionsPlugin({
 			// Indicates to our loaders that they should minify their output
 			// if they have the capability to do so.
@@ -62,6 +57,13 @@ module.exports = validate({
 			// Indicates to our loaders that they should enter into debug mode
 			// should they support it.
 			debug: false
+		}),
+		// JS Minification.
+		new webpack.optimize.UglifyJsPlugin({
+			compressor: {
+				warnings: false,
+				screw_ie8: true
+			}
 		}),
 		new StatsPlugin('webpack.stats.json', {
 			source: false,

@@ -1,9 +1,8 @@
-import React                      from 'react'
-import { render }                 from 'react-dom'
-import { AppContainer }           from 'react-hot-loader'
-import { Router, browserHistory } from 'react-router'
-import routes                     from './routes'
-import attachFastClick            from 'fastclick'
+import React            from 'react'
+import { render }       from 'react-dom'
+import { AppContainer } from 'react-hot-loader'
+import attachFastClick  from 'fastclick'
+import RootContainer    from './containers/RootContainer'
 
 import 'normalize.css/normalize.css'
 import './client.global.scss'
@@ -16,7 +15,7 @@ attachFastClick.attach(document.body)
 function renderApp() {
 	render(
         <AppContainer>
-            <Router history={browserHistory} routes={routes} />
+            <RootContainer />
         </AppContainer>,
 		container
 	)
@@ -27,7 +26,7 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
 	// Accept changes to this file for hot reloading.
 	module.hot.accept()
 	// Any changes to our routes will cause a hotload re-render
-	module.hot.accept('./routes', renderApp)
+	module.hot.accept('./containers/RootContainer', renderApp)
 }
 
 renderApp()
