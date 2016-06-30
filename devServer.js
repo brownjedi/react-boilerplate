@@ -36,21 +36,14 @@ app.get('*', (req, res) => {
 })
 
 const server = app.listen(devPort, devHost, err => {
-	if (err) {
-		console.log(err)
-		return
-	}
-	console.log(`===> 🌎  Dev Server started on http://${devHost}:${devPort}`)
+	if (err) return console.log(err)
+	return console.log(`===> 🌎  Dev Server started on http://${devHost}:${devPort}`)
 })
 
 function gracefulShutdown() {
 	console.log('Stopping Dev Server')
-	if (wdm) {
-		wdm.close()
-	}
-	if (server) {
-		server.close(() => process.exit(0))
-	}
+	if (wdm) wdm.close()
+	if (server) server.close(() => process.exit(0))
 }
 
 // listen for TERM signal .e.g. kill

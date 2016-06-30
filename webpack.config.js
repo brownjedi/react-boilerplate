@@ -12,6 +12,7 @@ module.exports = validate({
 	devtool: 'eval-source-map',
 	entry: {
 		main: [
+			'babel-polyfill',
 			'react-hot-loader/patch',
 			'webpack-hot-middleware/client?reload=true',
 			path.resolve(__dirname, 'src/client/index.js')
@@ -67,7 +68,7 @@ module.exports = validate({
 				loader: 'babel',
 				exclude: [/node_modules/, path.resolve(__dirname, 'dist')],
 				query: {
-					presets: ['react', 'es2015-webpack'],
+					presets: ['react', 'es2015-webpack', 'stage-0'],
 					plugins: ['react-hot-loader/babel']
 				}
 			},
@@ -109,6 +110,12 @@ module.exports = validate({
 					'postcss',
 					'sass'
 				]
+			}, {
+				test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
+				loader: 'url-loader?limit=10000'
+			}, {
+				test: /\.(eot|ttf|wav|mp3)$/,
+				loader: 'file-loader'
 			}
 		]
 	},

@@ -1,19 +1,21 @@
+require('dotenv').config({
+	silent: true
+})
 
-require('dotenv').config({ silent: true })
-
-const path                    = require('path')
-const webpack                 = require('webpack')
-const HtmlWebpackPlugin       = require('html-webpack-plugin')
-const ExtractTextPlugin       = require('extract-text-webpack-plugin')
-const StatsPlugin             = require('stats-webpack-plugin')
-const autoprefixer            = require('autoprefixer')
-const validate                = require('webpack-validator')
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const StatsPlugin = require('stats-webpack-plugin')
+const autoprefixer = require('autoprefixer')
+const validate = require('webpack-validator')
 
 module.exports = validate({
 	target: 'web',
 	devtool: 'cheap-module-source-map',
 	entry: {
 		main: [
+			'babel-polyfill',
 			path.resolve(__dirname, 'src/client/index.js')
 		],
 		vendor: [
@@ -84,7 +86,7 @@ module.exports = validate({
 				loader: 'babel',
 				exclude: [/node_modules/, path.resolve(__dirname, 'dist')],
 				query: {
-					presets: ['react', 'es2015-webpack']
+					presets: ['react', 'es2015-webpack', 'stage-0']
 				}
 			},
 			// JSON
@@ -121,6 +123,12 @@ module.exports = validate({
 					'postcss',
 					'sass'
 				])
+			}, {
+				test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
+				loader: 'url-loader?limit=10000'
+			}, {
+				test: /\.(eot|ttf|wav|mp3)$/,
+				loader: 'file-loader'
 			}
 		]
 	},
