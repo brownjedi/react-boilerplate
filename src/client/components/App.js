@@ -1,6 +1,9 @@
-import React from 'react'
-import './App.scss'
+import React      from 'react'
+import cssModules from 'react-css-modules'
+import styles     from './App.scss'
 
-export default () => (
-	<h4>Hello World</h4>
+const app = () => (
+	<h4 className="blue-color" styleName="red-color">Hello World</h4>
 )
+
+export default cssModules(app, styles)

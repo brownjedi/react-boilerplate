@@ -5,7 +5,7 @@ import App              from './components/App'
 import './app.global.scss'
 
 // Get the DOM Element that will host our React application.
-const container = document.getElementById('root')
+const container = document.getElementById('react-root')
 
 render(
     <AppContainer>
