@@ -1,14 +1,12 @@
-require('dotenv').config({
-	silent: true
-})
+require('dotenv').config({ silent: true })
 
-const path = require('path')
-const webpack = require('webpack')
+const path              = require('path')
+const webpack           = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const StatsPlugin = require('stats-webpack-plugin')
-const autoprefixer = require('autoprefixer')
-const validate = require('webpack-validator')
+const StatsPlugin       = require('stats-webpack-plugin')
+const autoprefixer      = require('autoprefixer')
+const validate          = require('webpack-validator')
 
 module.exports = validate({
 	target: 'web',
