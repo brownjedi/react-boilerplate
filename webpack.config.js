@@ -12,7 +12,6 @@ module.exports = validate({
 	devtool: 'eval-source-map',
 	entry: {
 		main: [
-			'babel-polyfill',
 			'react-hot-loader/patch',
 			'webpack-hot-middleware/client?reload=true',
 			path.resolve(__dirname, 'src/client/index.js')
@@ -20,9 +19,14 @@ module.exports = validate({
 		// We create a seperate chunk containing our vendor modules. This can
 		// avoid unnecessary downloads by users as well as speed up development
 		// rebuild times by not having to rebundle everything with every change.
+
+		// Avoid adding react-router to vendor in dev mode as the react hot load
+		// doesn't work when its added as a vendor. You can add this in production
 		vendor: [
 			'react',
-			'react-dom'
+			'react-dom',
+			'react-css-modules',
+			'fastclick'
 		]
 	},
 	output: {
@@ -56,7 +60,8 @@ module.exports = validate({
 				NODE_ENV: JSON.stringify('development'),
 				SERVER_PORT: JSON.stringify(process.env.SERVER_PORT),
 				CLIENT_DEVSERVER_PORT: JSON.stringify(process.env.CLIENT_DEVSERVER_PORT)
-			}
+			},
+			__DEV__: true
 		}),
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
@@ -80,7 +85,10 @@ module.exports = validate({
 				exclude: [/node_modules/, path.resolve(__dirname, 'dist')],
 				query: {
 					presets: ['react', 'es2015-webpack', 'stage-0'],
-					plugins: ['react-hot-loader/babel']
+					// Using babel-runtime instead of babel-polyfill to automatically
+					// polyfill without polluting globals
+					// @see https://medium.com/@jcse/clearing-up-the-babel-6-ecosystem-c7678a314bf3
+					plugins: ['react-hot-loader/babel', 'transform-runtime']
 				}
 			},
 			// JSON

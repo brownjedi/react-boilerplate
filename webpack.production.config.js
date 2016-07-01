@@ -13,12 +13,14 @@ module.exports = validate({
 	devtool: 'cheap-module-source-map',
 	entry: {
 		main: [
-			'babel-polyfill',
 			path.resolve(__dirname, 'src/client/index.js')
 		],
 		vendor: [
 			'react',
-			'react-dom'
+			'react-dom',
+			'react-router',
+			'react-css-modules',
+			'fastclick'
 		]
 	},
 	output: {
@@ -42,7 +44,8 @@ module.exports = validate({
 				NODE_ENV: JSON.stringify('production'),
 				SERVER_PORT: JSON.stringify(process.env.SERVER_PORT),
 				CLIENT_DEVSERVER_PORT: JSON.stringify(process.env.CLIENT_DEVSERVER_PORT)
-			}
+			},
+			__DEV__: false
 		}),
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
@@ -86,7 +89,11 @@ module.exports = validate({
 				loader: 'babel',
 				exclude: [/node_modules/, path.resolve(__dirname, 'dist')],
 				query: {
-					presets: ['react', 'es2015-webpack', 'stage-0']
+					presets: ['react', 'es2015-webpack', 'stage-0'],
+					// Using babel-runtime instead of babel-polyfill to automatically
+					// polyfill without polluting globals
+					// @see https://medium.com/@jcse/clearing-up-the-babel-6-ecosystem-c7678a314bf3
+					plugins: ['transform-runtime']
 				}
 			},
 			// JSON

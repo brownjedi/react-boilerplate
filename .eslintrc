@@ -7,6 +7,9 @@
     "node": true,
     "mocha": true
   },
+  "globals": {
+    "__DEV__": true
+  },
   "ecmaFeatures": {
     "defaultParams": true,
     "jsx": true,

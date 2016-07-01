@@ -1,58 +1,22 @@
-/* eslint no-unused-vars: 0  */
 /* eslint import/no-unresolved: [2, { ignore: ['^promise\?global.*'] }]*/
+/* eslint global-require: 0 */
 import React                 from 'react'
 import { Route, IndexRoute } from 'react-router'
+import { lazyLoadComponent } from './utils/lazy-loading'
 
 // Import the component normally in case you want to bundle with the starting javascript file
 import App                   from './components/App'
 
-// Lazy Load the Paths (Do this to do code-splitting so that the pages javascript chunk) only gets
-// loaded if the url is accessed
+// Lazy Load the Paths (Do this to do code-splitting so that the pages javascript
+// chunk only gets loaded if the url is accessed)
 import Home                  from 'promise?global!./components/Home'
 import About                 from 'promise?global!./components/About'
 
-function handleError(err) {
-	// TODO : Error Handling
-	console.log('==> Error occurred loading dynamic route') // eslint-disable-line no-console
-	console.log(err) // eslint-disable-line no-console
-}
-
-function lazyLoadComponent(lazyModule) {
-	return (nextState, cb) =>
-		lazyModule()
-			.then(module => cb(null, module.default))
-			.catch(handleError)
-}
-
-function lazyLoadComponents(lazyModules) {
-	return (nextState, cb) => {
-		const moduleKeys = Object.keys(lazyModules)
-		const promises = moduleKeys.map(key => lazyModules[key])
-		Promise.all(promises)
-			.then(modules => {
-				cb(null, modules.reduce((acc, module, i) =>
-					// Essentially we are doing acc[moduleKeys[i]] = module; return acc;
-					// We are doing this way to aviod mutation
-					// In the new ES2015 Standard, dynamic keys can be created using then following
-					// syntax
-					//
-					//	let obj = {
-					//	  [myKey]: value
-					//	}
-					//
-					// This is similar to doing
-					//
-					// let temp = myKey /* Here myKey is a dynamically computed value like moduleKeys[i] */
-					// let obj = {
-					//	  temp: value
-					// }
-					//
-					Object.assign({}, acc, {
-						[moduleKeys[i]]: module.default
-					}), {}))
-			})
-			.catch(handleError)
-	}
+// This is required to do for all async routes during development to ensure react-hot-reload
+// works
+if (__DEV__) {
+	require('./components/Home')
+	require('./components/About')
 }
 
 /**
