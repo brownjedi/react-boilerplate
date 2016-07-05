@@ -5,18 +5,20 @@ import { Route, IndexRoute } from 'react-router'
 import { lazyLoadComponent } from './utils/lazy-loading'
 
 // Import the component normally in case you want to bundle with the starting javascript file
-import App                   from './components/App'
+import App                   from './containers/pages/App'
 
 // Lazy Load the Paths (Do this to do code-splitting so that the pages javascript
 // chunk only gets loaded if the url is accessed)
-import Home                  from 'promise?global!./components/Home'
-import About                 from 'promise?global!./components/About'
+import Home                  from 'promise?global!./containers/pages/Home'
+import About                 from 'promise?global!./containers/pages/About'
+import NotFound              from 'promise?global!./containers/pages/NotFound'
 
 // This is required to do for all async routes during development to ensure react-hot-reload
 // works
 if (__DEV__) {
-	require('./components/Home')
-	require('./components/About')
+	require('./containers/pages/Home')
+	require('./containers/pages/About')
+	require('./containers/pages/NotFound')
 }
 
 /**
@@ -32,6 +34,7 @@ const routes = (
 	<Route path="/" component={App}>
 		<IndexRoute getComponent={lazyLoadComponent(Home)} />
 		<Route path="/about" getComponent={lazyLoadComponent(About)} />
+		<Route path="*" getComponent={lazyLoadComponent(NotFound)} />
 	</Route>
 )
 
