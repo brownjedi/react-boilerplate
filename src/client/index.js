@@ -1,8 +1,11 @@
-import React            from 'react'
-import { render }       from 'react-dom'
-import { AppContainer } from 'react-hot-loader'
-import attachFastClick  from 'fastclick'
-import RootContainer    from './containers/Root'
+import React                    from 'react'
+import { render }               from 'react-dom'
+import { AppContainer }         from 'react-hot-loader'
+import { browserHistory }       from 'react-router'
+import { syncHistoryWithStore } from 'react-router-redux'
+import attachFastClick          from 'fastclick'
+import configureStore           from './store/configureStore'
+import RootContainer            from './containers/Root'
 
 import 'normalize.css/normalize.css'
 import './client.global.scss'
@@ -12,17 +15,22 @@ const container = document.getElementById('react-root')
 // Remove 300ms tap delay on mobile devices
 attachFastClick.attach(document.body)
 
+// Initialize the store
+const store = configureStore()
+// Sync the History with the Store
+const history = syncHistoryWithStore(browserHistory, store)
+
 function renderApp() {
 	render(
         <AppContainer>
-            <RootContainer />
+            <RootContainer store={store} history={history} />
         </AppContainer>,
 		container
 	)
 }
 
 // The following is needed so that we can hot reload our App.
-if (process.env.NODE_ENV === 'development' && module.hot) {
+if (__DEV__ && module.hot) {
 	// Accept changes to this file for hot reloading.
 	module.hot.accept()
 	// Any changes to our routes will cause a hotload re-render

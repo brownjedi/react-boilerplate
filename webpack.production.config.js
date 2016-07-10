@@ -18,6 +18,10 @@ module.exports = validate({
 			'react-dom',
 			'react-router',
 			'react-css-modules',
+			'react-redux',
+			'react-router-redux',
+			'redux',
+			'redux-thunk',
 			'fastclick'
 		]
 	},

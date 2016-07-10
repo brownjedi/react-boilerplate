@@ -23,12 +23,13 @@
       }
     }],
     "semi": [2, "never"],
-    "indent": [2, "tab"],
+    "indent": [2, "tab", {"SwitchCase": 1}],
     "comma-dangle": [2, "never"],
     "new-cap": [2, {
       "properties": false
     }],
-    "react/jsx-indent": [0]
+    "react/jsx-indent": [0],
+    "react/jsx-indent-props": [0]
   },
   "plugins": [
     "react"

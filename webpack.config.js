@@ -23,7 +23,11 @@ module.exports = validate({
 			'react',
 			'react-dom',
 			'react-css-modules',
-			'fastclick'
+			'fastclick',
+			'react-redux',
+			'react-router-redux',
+			'redux',
+			'redux-thunk'
 		]
 	},
 	output: {
