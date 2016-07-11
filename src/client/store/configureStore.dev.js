@@ -2,11 +2,12 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk                                     from 'redux-thunk'
 import { persistState }                          from 'redux-devtools'
+import reduxImmutableStateInvariant              from 'redux-immutable-state-invariant'
 import DevTools                                  from '../containers/DevTools'
 import rootReducer                               from '../reducers'
 
 const enhancer = compose(
-	applyMiddleware(thunk),
+	applyMiddleware(reduxImmutableStateInvariant(), thunk),
 	window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
 	persistState(
 		window.location.href.match(
