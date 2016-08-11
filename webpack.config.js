@@ -109,7 +109,15 @@ module.exports = validate({
 				test: /^((?!\.global).)*\.css$/,
 				loaders: [
 					'style',
-					'css?modules&sourceMap&importLoaders=1&localIdentName=[name]---[local]---[hash:base64:5]',
+					{
+						loader: 'css',
+						query: {
+							modules: true,
+							sourceMap: true,
+							importLoaders: 1,
+							localIdentName: '[name]---[local]---[hash:base64:5]'
+						}
+					},
 					'postcss'
 				]
 			},
@@ -126,7 +134,15 @@ module.exports = validate({
 				test: /^((?!\.global).)*\.(scss|sass)$/,
 				loaders: [
 					'style',
-					'css?modules&sourceMap&importLoaders=1&localIdentName=[name]---[local]---[hash:base64:5]',
+					{
+						loader: 'css',
+						query: {
+							modules: true,
+							sourceMap: true,
+							importLoaders: 1,
+							localIdentName: '[name]---[local]---[hash:base64:5]'
+						}
+					},
 					'postcss',
 					'sass'
 				]

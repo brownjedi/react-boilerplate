@@ -106,32 +106,51 @@ module.exports = validate({
 			// CSS
 			{
 				test: /\.global\.css$/,
-				loader: ExtractTextPlugin.extract('style', [
-					'css',
-					'postcss'
-				])
+				loader: ExtractTextPlugin.extract({
+					fallbackLoader: 'style',
+					loader: ['css', 'postcss']
+				})
 			}, {
 				test: /^((?!\.global).)*\.css$/,
-				loader: ExtractTextPlugin.extract('style', [
-					'css?modules&importLoaders=1&localIdentName=[name]---[local]---[hash:base64:5]',
-					'postcss'
-				])
+				loader: ExtractTextPlugin.extract({
+					fallbackLoader: 'style',
+					loader: [
+						{
+							loader: 'css',
+							query: {
+								modules: true,
+								importLoaders: 1,
+								localIdentName: '[name]---[local]---[hash:base64:5]'
+							}
+						},
+						'postcss'
+					]
+				})
 			},
 			// SCSS
 			{
 				test: /\.global\.(scss|sass)$/,
-				loader: ExtractTextPlugin.extract('style', [
-					'css',
-					'postcss',
-					'sass'
-				])
+				loader: ExtractTextPlugin.extract({
+					fallbackLoader: 'style',
+					loader: ['css', 'postcss', 'sass']
+				})
 			}, {
 				test: /^((?!\.global).)*\.(scss|sass)$/,
-				loader: ExtractTextPlugin.extract('style', [
-					'css?modules&importLoaders=1&localIdentName=[name]---[local]---[hash:base64:5]',
-					'postcss',
-					'sass'
-				])
+				loader: ExtractTextPlugin.extract({
+					fallbackLoader: 'style',
+					loader: [
+						{
+							loader: 'css',
+							query: {
+								modules: true,
+								importLoaders: 1,
+								localIdentName: '[name]---[local]---[hash:base64:5]'
+							}
+						},
+						'postcss',
+						'sass'
+					]
+				})
 			}, {
 				test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
 				loader: 'url-loader?limit=10000'
