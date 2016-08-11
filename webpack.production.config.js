@@ -91,7 +91,7 @@ module.exports = validate({
 				loader: 'babel',
 				exclude: [/node_modules/, path.resolve(__dirname, 'dist')],
 				query: {
-					presets: ['react', 'es2015-webpack', 'stage-0'],
+					presets: ['react', ['es2015', { modules: false }], 'stage-0'],
 					// Using babel-runtime instead of babel-polyfill to automatically
 					// polyfill without polluting globals
 					// @see https://medium.com/@jcse/clearing-up-the-babel-6-ecosystem-c7678a314bf3

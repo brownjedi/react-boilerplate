@@ -23,13 +23,18 @@
       }
     }],
     "semi": [2, "never"],
-    "indent": [2, "tab", {"SwitchCase": 1}],
+    "indent": [2, "tab", {
+      "SwitchCase": 1
+    }],
     "comma-dangle": [2, "never"],
     "new-cap": [2, {
       "properties": false
     }],
+    "import/no-extraneous-dependencies": [0],
     "react/jsx-indent": [0],
-    "react/jsx-indent-props": [0]
+    "react/jsx-indent-props": [0],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "import/imports-first": [0]
   },
   "plugins": [
     "react"
