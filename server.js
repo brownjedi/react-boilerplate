@@ -4,12 +4,12 @@ const express              = require('express')
 const webpack              = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
-const devConfig            = require('./webpack.config')
-const prodConfig           = require('./webpack.production.config')
+const devConfig            = require('./webpack.dev.config')
+const prodConfig           = require('./webpack.prod.config')
 
-const app      = express()
-const port  = process.env.PORT || 3000
-const host  = process.env.HOST || 'localhost'
+const app  = express()
+const port = process.env.PORT || 3000
+const host = process.env.HOST || 'localhost'
 
 if (process.env.NODE_ENV === 'development') {
 	const compiler = webpack(devConfig)

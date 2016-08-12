@@ -5,8 +5,8 @@ import logger     from 'morgan'
 import apiRoutes  from './routes/apiRoutes'
 
 const app     = express()
-const port    = process.env.PORT || process.env.SERVER_PORT || 3000
-const host    = process.env.HOST || process.env.SERVER_HOST || 'localhost'
+const port    = process.env.PORT || 3000
+const host    = process.env.HOST || 'localhost'
 
 app.use(logger('dev'))
 app.use(bodyParser.json())

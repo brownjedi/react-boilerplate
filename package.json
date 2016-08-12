@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "eslint": "eslint .",
     "clean": "rimraf dist",
-    "build": "npm run clean && cross-env NODE_ENV=production webpack --config webpack.production.config.js --progress --profile",
+    "build": "npm run clean && cross-env NODE_ENV=production webpack --config webpack.prod.config.js --progress --profile",
     "dev": "cross-env NODE_ENV=development node server",
     "start": "cross-env NODE_ENV=production node server"
   },
@@ -43,6 +43,7 @@
     "html-webpack-plugin": "^2.22.0",
     "jsdom": "^9.4.1",
     "json-loader": "^0.5.4",
+    "lodash": "^4.14.2",
     "mocha": "^3.0.2",
     "node-sass": "^3.8.0",
     "postcss-loader": "^0.9.1",
