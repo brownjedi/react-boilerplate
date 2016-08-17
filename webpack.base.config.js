@@ -66,7 +66,7 @@ const config = {
 					// Using babel-runtime instead of babel-polyfill to automatically
 					// polyfill without polluting globals
 					// @see https://medium.com/@jcse/clearing-up-the-babel-6-ecosystem-c7678a314bf3
-					plugins: ['transform-runtime']
+					plugins: ['transform-runtime', ['typecheck', { disable: { production: true } }]]
 				}
 			},
 			// JSON Loader

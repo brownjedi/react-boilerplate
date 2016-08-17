@@ -1,6 +1,6 @@
 import * as types from './../constants/actionTypes'
 
-export default function counterReducer(state = 0, action) {
+export default function counterReducer(state = 0, action): number {
 	switch (action.type) {
 		case types.INCREMENT_COUNTER:
 			return state + 1
