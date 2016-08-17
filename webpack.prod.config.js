@@ -1,13 +1,16 @@
 /* eslint no-console: 0 */
+
+// Invalidate the cache so that we can get a clean base config and not a modified
+// one by the other webpack config. This happens when building for production while
+// running the dev server
+delete require.cache[require.resolve('./webpack.base.config')]
+
 const webpack           = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const StatsPlugin       = require('stats-webpack-plugin')
 const autoprefixer      = require('autoprefixer')
 const validate          = require('webpack-validator')
-const _                 = require('lodash')
-const baseConfig        = require('./webpack.base.config')
-
-const config = _.cloneDeep(baseConfig)
+const config            = require('./webpack.base.config')
 
 config.devtool = 'cheap-module-source-map'
 
