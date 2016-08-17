@@ -6,6 +6,7 @@
 delete require.cache[require.resolve('./webpack.base.config')]
 
 const webpack           = require('webpack')
+const WebpackMd5Hash    = require('webpack-md5-hash')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const StatsPlugin       = require('stats-webpack-plugin')
 const autoprefixer      = require('autoprefixer')
@@ -18,7 +19,7 @@ config.devtool = 'cheap-module-source-map'
 // doesn't work when its added as a vendor. You can add this in production
 config.entry.vendor.push('react-router')
 
-config.output.filename = '[name]-[hash].min.js'
+config.output.filename = '[name]-[chunkhash].min.js'
 config.output.chunkFilename = '[name]-[chunkhash].min.js'
 
 config.plugins.push(...[
@@ -28,7 +29,10 @@ config.plugins.push(...[
 		},
 		__DEV__: false
 	}),
-	new ExtractTextPlugin('[name]-[hash].min.css'),
+	new ExtractTextPlugin({
+		filename: '[name]-[chunkhash].min.css',
+		allChunks: true
+	}),
 	// Adds options to all of our loaders.
 	new webpack.LoaderOptionsPlugin({
 		// Indicates to our loaders that they should minify their output
@@ -48,7 +52,13 @@ config.plugins.push(...[
 	new StatsPlugin('webpack.stats.json', {
 		source: false,
 		modules: false
-	})
+	}),
+	// We use this so that our generated [chunkhash]'s are only different if
+	// the content for our respective chunks have changed.  This optimises
+	// our long term browser caching strategy for our client bundle, avoiding
+	// cases where browsers end up having to download all the client chunks
+	// even though 1 or 2 may have only changed.
+	new WebpackMd5Hash()
 ])
 
 config.module.loaders.push(...[

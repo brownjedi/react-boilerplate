@@ -75,13 +75,15 @@ const config = {
 				loader: 'json'
 			},
 			// URL Loader (Images, fonts etc...)
+			// Any file with a byte smaller than this will be "inlined" via
+            // a base64 representation.
 			{
-				test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
+				test: /\.(jpg|jpeg|png|gif|ico|eot|svg|ttf|woff|woff2|otf)$/,
 				loader: 'url-loader?limit=10000'
 			},
 			// File Loader
 			{
-				test: /\.(eot|ttf|wav|mp3)$/,
+				test: /\.(wav|mp3)$/,
 				loader: 'file-loader'
 			}
 		]
