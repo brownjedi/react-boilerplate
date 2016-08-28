@@ -1,7 +1,7 @@
 /* eslint global-require: 0 */
 import { createStore, applyMiddleware } from 'redux'
 import thunk                            from 'redux-thunk'
-import rootReducer                      from '../reducers'
+import rootReducer                      from 'client/reducers'
 
 const enhancer = applyMiddleware(thunk)
 

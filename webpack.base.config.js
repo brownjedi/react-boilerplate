@@ -1,12 +1,18 @@
 const path              = require('path')
 const webpack           = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const autoprefixer      = require('autoprefixer')
 
 const config = {
 	target: 'web',
 	resolve: {
 		// These extensions are tried when resolving a file.
-		extensions: ['', '.js', '.jsx']
+		extensions: ['', '.js', '.jsx'],
+		// In which folders the resolver look for modules
+		// relative paths are looked up in every parent folder (like node_modules)
+		// absolute paths are looked up directly
+		// the order is respected
+		modules: [path.resolve(__dirname, 'src'), 'node_modules']
 	},
 	entry: {
 		main: [
@@ -31,7 +37,7 @@ const config = {
 	},
 	output: {
 		// The dir in which our bundle should be output.
-		path: path.resolve(__dirname, 'dist'),
+		path: path.resolve(__dirname, 'build'),
 		publicPath: '/'
 	},
 	plugins: [
@@ -52,7 +58,7 @@ const config = {
 			{
 				test: /\.js?$/,
 				loader: 'eslint',
-				exclude: [/node_modules/, path.resolve(__dirname, 'dist')]
+				exclude: [/node_modules/, path.resolve(__dirname, 'build')]
 			}
 		],
 		loaders: [
@@ -60,13 +66,18 @@ const config = {
 			{
 				test: /\.js$/,
 				loader: 'babel',
-				exclude: [/node_modules/, path.resolve(__dirname, 'dist')],
+				exclude: [/node_modules/, path.resolve(__dirname, 'build')],
 				query: {
 					presets: ['react', ['es2015', { modules: false }], 'stage-0'],
 					// Using babel-runtime instead of babel-polyfill to automatically
 					// polyfill without polluting globals
 					// @see https://medium.com/@jcse/clearing-up-the-babel-6-ecosystem-c7678a314bf3
-					plugins: ['transform-runtime', ['typecheck', { disable: { production: true } }]]
+					plugins: [
+						'transform-runtime',
+						['typecheck', { disable: { production: true } }],
+						'transform-object-rest-spread',
+						'transform-class-properties'
+					]
 				}
 			},
 			// JSON Loader
@@ -74,17 +85,34 @@ const config = {
 				test: /\.json?$/,
 				loader: 'json'
 			},
-			// URL Loader (Images, fonts etc...)
+			// URL Loader (Images Definitions)
 			// Any file with a byte smaller than this will be "inlined" via
             // a base64 representation.
 			{
-				test: /\.(jpg|jpeg|png|gif|ico|eot|svg|ttf|woff|woff2|otf)$/,
-				loader: 'url-loader?limit=10000'
+				test: /\.(jpg|jpeg|png|gif|ico)$/,
+				loader: 'url?limit=10000'
+			},
+			// Font Definitions
+			{
+				test: /\.svg$/,
+				loader: 'url?limit=65000&mimetype=image/svg+xml'
+			}, {
+				test: /\.woff$/,
+				loader: 'url?limit=65000&mimetype=application/font-woff'
+			}, {
+				test: /\.woff2$/,
+				loader: 'url?limit=65000&mimetype=application/font-woff2'
+			}, {
+				test: /\.[ot]tf$/,
+				loader: 'url?limit=65000&mimetype=application/octet-stream'
+			}, {
+				test: /\.eot$/,
+				loader: 'url?limit=65000&mimetype=application/vnd.ms-fontobject'
 			},
 			// File Loader
 			{
 				test: /\.(wav|mp3)$/,
-				loader: 'file-loader'
+				loader: 'file'
 			}
 		]
 	},
@@ -92,7 +120,9 @@ const config = {
 		failOnWarning: false,
 		failOnError: true,
 		configFile: './.eslintrc'
-	}
+	},
+
+	postcss: [autoprefixer]
 }
 
 module.exports = config

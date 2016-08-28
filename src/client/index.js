@@ -4,7 +4,9 @@ import { AppContainer }         from 'react-hot-loader'
 import { browserHistory }       from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import attachFastClick          from 'fastclick'
-import configureStore           from './store/configureStore'
+// Don't make the route as client/containers/Root...
+// for some reason hot reload doesn't work if we do that
+import configureStore           from 'client/store/configureStore'
 import RootContainer            from './containers/Root'
 
 import 'normalize.css/normalize.css'

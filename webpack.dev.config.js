@@ -6,7 +6,6 @@
 delete require.cache[require.resolve('./webpack.base.config')]
 
 const webpack    = require('webpack')
-const validate   = require('webpack-validator')
 const config     = require('./webpack.base.config')
 
 config.debug = true
@@ -50,7 +49,7 @@ config.module.loaders.push(...[
 		loaders: [
 			'style',
 			'css?sourceMap',
-			'postcss'
+			'postcss?sourceMap=inline'
 		]
 	},
 	{
@@ -66,7 +65,7 @@ config.module.loaders.push(...[
 					localIdentName: '[name]---[local]---[hash:base64:5]'
 				}
 			},
-			'postcss'
+			'postcss?sourceMap=inline'
 		]
 	},
 	// SCSS
@@ -75,8 +74,11 @@ config.module.loaders.push(...[
 		loaders: [
 			'style',
 			'css?sourceMap',
-			'postcss',
-			'sass'
+			'postcss?sourceMap=inline',
+			'resolve-url',
+			// resolve-url-loader needs source maps from  preceding loaders and
+			// resolves relative paths in url() statements based on the original source file.
+			'sass?sourceMap&sourceMapContents'
 		]
 	},
 	{
@@ -92,10 +94,13 @@ config.module.loaders.push(...[
 					localIdentName: '[name]---[local]---[hash:base64:5]'
 				}
 			},
-			'postcss',
-			'sass'
+			'postcss?sourceMap=inline',
+			'resolve-url',
+			// resolve-url-loader needs source maps from  preceding loaders and
+			// resolves relative paths in url() statements based on the original source file.
+			'sass?sourceMap&sourceMapContents'
 		]
 	}
 ])
 
-module.exports = validate(config)
+module.exports = config

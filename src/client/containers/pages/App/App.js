@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import cssModules           from 'react-css-modules'
-import Header               from '../../../components/Header'
+import Header               from 'client/components/Header'
 import styles               from './style.scss'
 
 const App = ({ children }) => (

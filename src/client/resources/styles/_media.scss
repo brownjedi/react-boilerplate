@@ -1,0 +1,30 @@
+
+$w-phone: 375px;
+$w-tablet: 768px;
+$w-desk: 1024px;
+$w-retina2x: (
+  '(-webkit-min-device-pixel-ratio: 2)',
+  '(min-resolution: 192dpi)'
+);
+$w-retina3x: (
+  '(-webkit-min-device-pixel-ratio: 3)',
+  '(min-resolution: 350dpi)'
+);
+
+@mixin media-max-width($max-w) {
+  @media only screen and (max-width: $max-w) {
+    @content
+  }
+};
+
+@mixin media-min-width($min-w) {
+  @media only screen and (min-width: $min-w) {
+    @content
+  }
+};
+
+@mixin media-minmax-width($min-w, $max-w) {
+  @media only screen and (min-width: $min-w) and (max-width: $max-w) {
+    @content
+  }
+};

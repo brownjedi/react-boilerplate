@@ -1,4 +1,4 @@
-import * as types from './../constants/actionTypes'
+import * as types from 'client/constants/actionTypes'
 
 export default function counterReducer(state = 0, action): number {
 	switch (action.type) {

@@ -1,0 +1,25 @@
+@import '~client/resources/styles/fontfaces';
+@import '~client/resources/styles/all';
+
+* {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+body,
+.viewport {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: $font-stack-light;
+  font-style: normal;
+}
+
+#react-root {
+  height: 100%;
+  width: 100%;
+}

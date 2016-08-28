@@ -31,6 +31,8 @@
       "properties": false
     }],
     "import/no-extraneous-dependencies": [0],
+    "import/no-unresolved": [0],
+    "no-underscore-dangle": ["error", { "allowAfterThis": true }],
     "react/jsx-indent": [0],
     "react/jsx-indent-props": [0],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],

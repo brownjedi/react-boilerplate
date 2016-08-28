@@ -9,8 +9,6 @@ const webpack           = require('webpack')
 const WebpackMd5Hash    = require('webpack-md5-hash')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const StatsPlugin       = require('stats-webpack-plugin')
-const autoprefixer      = require('autoprefixer')
-const validate          = require('webpack-validator')
 const config            = require('./webpack.base.config')
 
 config.devtool = 'cheap-module-source-map'
@@ -92,7 +90,9 @@ config.module.loaders.push(...[
 		test: /\.global\.(scss|sass)$/,
 		loader: ExtractTextPlugin.extract({
 			fallbackLoader: 'style',
-			loader: ['css', 'postcss', 'sass']
+			// resolve-url-loader needs source maps from  preceding loaders and
+			// resolves relative paths in url() statements based on the original source file.
+			loader: ['css', 'postcss', 'resolve-url', 'sass?sourceMap']
 		})
 	},
 	{
@@ -109,12 +109,13 @@ config.module.loaders.push(...[
 					}
 				},
 				'postcss',
-				'sass'
+				'resolve-url',
+				// resolve-url-loader needs source maps from  preceding loaders and
+				// resolves relative paths in url() statements based on the original source file.
+				'sass?sourceMap'
 			]
 		})
 	}
 ])
 
-config.postcss = [autoprefixer]
-
-module.exports = validate(config)
+module.exports = config

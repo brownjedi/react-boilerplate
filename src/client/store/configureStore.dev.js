@@ -3,8 +3,8 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import thunk                                     from 'redux-thunk'
 import { persistState }                          from 'redux-devtools'
 import reduxImmutableStateInvariant              from 'redux-immutable-state-invariant'
-import DevTools                                  from '../containers/DevTools'
-import rootReducer                               from '../reducers'
+import DevTools                                  from 'client/containers/DevTools'
+import rootReducer                               from 'client/reducers'
 
 const enhancer = compose(
 	applyMiddleware(reduxImmutableStateInvariant(), thunk),
@@ -20,8 +20,8 @@ export default function configureStore(inititalState) {
 	const store = createStore(rootReducer, inititalState, enhancer)
 
 	if (__DEV__ && module.hot) {
-		module.hot.accept('../reducers', () =>
-			store.replaceReducer(require('../reducers').default)
+		module.hot.accept('client/reducers', () =>
+			store.replaceReducer(require('client/reducers').default)
 		)
 	}
 
