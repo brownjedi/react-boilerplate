@@ -2,7 +2,7 @@
 import express    from 'express'
 import bodyParser from 'body-parser'
 import logger     from 'morgan'
-import apiRoutes  from './routes/apiRoutes'
+import apiRoutes  from 'server/routes/apiRoutes'
 
 const app     = express()
 const port    = process.env.PORT || 3000

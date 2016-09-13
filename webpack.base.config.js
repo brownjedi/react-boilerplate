@@ -1,7 +1,9 @@
-const path              = require('path')
-const webpack           = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const autoprefixer      = require('autoprefixer')
+const path                = require('path')
+const webpack             = require('webpack')
+const HtmlWebpackPlugin   = require('html-webpack-plugin')
+const AssetsWebpackPlugin = require('assets-webpack-plugin')
+const CopyWebpackPlugin   = require('copy-webpack-plugin')
+const autoprefixer        = require('autoprefixer')
 
 const config = {
 	target: 'web',
@@ -28,11 +30,14 @@ const config = {
 			'react',
 			'react-dom',
 			'react-css-modules',
+			'react-helmet',
 			'react-redux',
 			'react-router-redux',
 			'redux',
 			'redux-thunk',
-			'fastclick'
+			'fastclick',
+			'es6-promise',
+			'whatwg-fetch'
 		]
 	},
 	output: {
@@ -50,7 +55,23 @@ const config = {
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
 			minChunks: Infinity
-		})
+		}),
+		new AssetsWebpackPlugin({
+			filename: 'assets.json',
+			path: path.resolve(__dirname, 'build')
+		}),
+		// Polyfill Promise and fetch for older browsers
+		new webpack.ProvidePlugin({
+			Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
+			fetch: 'imports?this=>global!exports?global.fetch!fetch'
+		}),
+		// Copy the apple-icons, windows-icons and favicons to the dist directory
+		new CopyWebpackPlugin([
+			// This is needed in production environment.
+			{
+				from: path.resolve(__dirname, 'server.js')
+			}
+		])
 	],
 	module: {
 		preLoaders: [

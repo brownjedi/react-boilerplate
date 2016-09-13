@@ -1,5 +1,5 @@
 {
-  "name": "react-redux-boilerplate",
+  "name": "react-boilerplate",
   "version": "0.0.1",
   "description": "",
   "main": "server.js",
@@ -10,7 +10,7 @@
     "clean": "rimraf build",
     "build": "npm run clean && cross-env NODE_ENV=production webpack --config webpack.prod.config.js --progress --profile",
     "dev": "cross-env NODE_ENV=development node server",
-    "start": "cross-env NODE_ENV=production node server"
+    "start": "cross-env NODE_ENV=production node build/server"
   },
   "engines": {
     "node": "6.3.1",
@@ -26,6 +26,7 @@
   "author": "Sai Karthik Reddy Ginni <saikarthikreddyginni@outlook.com>",
   "license": "MIT",
   "devDependencies": {
+    "assets-webpack-plugin": "^3.4.0",
     "autoprefixer": "^6.3.7",
     "babel-core": "^6.10.4",
     "babel-eslint": "^6.1.2",
@@ -34,11 +35,13 @@
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
     "babel-plugin-transform-runtime": "^6.9.0",
     "babel-plugin-typecheck": "^3.9.0",
+    "babel-polyfill": "^6.13.0",
     "babel-preset-es2015": "^6.13.2",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.14.0",
     "chai": "^3.5.0",
+    "copy-webpack-plugin": "^3.0.1",
     "css-loader": "^0.24.0",
     "eslint": "^3.0.1",
     "eslint-config-airbnb": "^10.0.0",
@@ -46,9 +49,11 @@
     "eslint-plugin-import": "^1.10.2",
     "eslint-plugin-jsx-a11y": "^2.1.0",
     "eslint-plugin-react": "^6.0.0",
+    "exports-loader": "^0.6.3",
     "extract-text-webpack-plugin": "^2.0.0-beta.3",
     "file-loader": "^0.9.0",
     "html-webpack-plugin": "^2.22.0",
+    "imports-loader": "^0.6.5",
     "jsdom": "^9.4.1",
     "json-loader": "^0.5.4",
     "mocha": "^3.0.2",
@@ -69,14 +74,14 @@
     "webpack": "^2.1.0-beta.20",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.12.1",
-    "webpack-md5-hash": "0.0.5",
-    "webpack-validator": "^2.2.2"
+    "webpack-md5-hash": "0.0.5"
   },
   "dependencies": {
     "babel-runtime": "^6.9.2",
     "body-parser": "^1.15.2",
     "compression": "^1.6.2",
     "cross-env": "^2.0.0",
+    "es6-promise": "^3.3.0",
     "express": "^4.14.0",
     "fastclick": "^1.0.6",
     "hpp": "^0.2.1",
@@ -85,10 +90,12 @@
     "react": "^15.2.1",
     "react-css-modules": "^3.7.7",
     "react-dom": "^15.2.1",
+    "react-helmet": "^3.1.0",
     "react-redux": "^4.4.5",
     "react-router": "^2.5.2",
     "react-router-redux": "^4.0.5",
     "redux": "^3.5.2",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "whatwg-fetch": "^1.0.0"
   }
 }

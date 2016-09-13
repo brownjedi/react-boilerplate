@@ -1,14 +1,17 @@
-import * as types from 'client/constants/actionTypes'
+import {
+	INCREMENT_COUNTER,
+	DECREMENT_COUNTER
+} from 'client/constants/actionTypes'
 
 export function incrementCounter() {
 	return {
-		type: types.INCREMENT_COUNTER
+		type: INCREMENT_COUNTER
 	}
 }
 
 export function decrementCounter() {
 	return {
-		type: types.DECREMENT_COUNTER
+		type: DECREMENT_COUNTER
 	}
 }
 

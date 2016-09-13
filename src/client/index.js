@@ -2,7 +2,6 @@ import React                    from 'react'
 import { render }               from 'react-dom'
 import { AppContainer }         from 'react-hot-loader'
 import { browserHistory }       from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
 import attachFastClick          from 'fastclick'
 // Don't make the route as client/containers/Root...
 // for some reason hot reload doesn't work if we do that
@@ -10,7 +9,7 @@ import configureStore           from 'client/store/configureStore'
 import RootContainer            from './containers/Root'
 
 import 'normalize.css/normalize.css'
-import './client.global.scss'
+import 'client/client.global.scss'
 
 // Get the DOM Element that will host our React application.
 const container = document.getElementById('react-root')
@@ -18,9 +17,7 @@ const container = document.getElementById('react-root')
 attachFastClick.attach(document.body)
 
 // Initialize the store
-const store = configureStore()
-// Sync the History with the Store
-const history = syncHistoryWithStore(browserHistory, store)
+const { store, history } = configureStore(browserHistory)
 
 function renderApp() {
 	render(
