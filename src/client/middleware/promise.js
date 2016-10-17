@@ -38,14 +38,14 @@ const promiseMiddleware = store => next => action => {
 	next(getRestOfActionWithoutPromise({ type: REQUEST }))
 	return promise.then(
 		result => {
-			setTimeout(() => next(getRestOfActionWithoutPromise({
+			next(getRestOfActionWithoutPromise({
 				payload: result, type: SUCCESS
-			})), 1300)
+			}))
 		},
 		error => {
-			setTimeout(() => next(getRestOfActionWithoutPromise({
+			next(getRestOfActionWithoutPromise({
 				payload: error, type: FAILURE
-			})), 1300)
+			}))
 		}
 	)
 }

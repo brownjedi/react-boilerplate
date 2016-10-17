@@ -74,5 +74,5 @@ if (__DEV__) {
 
 app.listen(port, host, err => {
 	if (err) return console.log(err)
-	return console.log(`===> 🌎  Concierge Server started on http://${host}:${port}`)
+	return console.log(`===> 🌎 Server started on http://${host}:${port}`)
 })

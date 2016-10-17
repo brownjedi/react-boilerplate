@@ -8,7 +8,6 @@ delete require.cache[require.resolve('./webpack.base.config')]
 const webpack    = require('webpack')
 const config     = require('./webpack.base.config')
 
-config.debug = true
 config.devtool = 'eval-source-map'
 config.entry.main.unshift(...[
 	'react-hot-loader/patch',
@@ -27,6 +26,14 @@ config.plugins.push(...[
 	// We don't want webpack errors to occur during development as it will
 	// kill our dev servers.
 	new webpack.NoErrorsPlugin(),
+	// The 'debug' property was removed in webpack 2.
+    // Loaders should be updated to allow passing this option via loader options in module.rules.
+	// Until loaders are updated one can use the LoaderOptionsPlugin to switch loaders into debug mod
+	new webpack.LoaderOptionsPlugin({
+		// Indicates to our loaders that they should enter into debug mode
+		// should they support it.
+		debug: true
+	}),
 	new webpack.DefinePlugin({
 		'process.env': {
 			NODE_ENV: JSON.stringify('development')
