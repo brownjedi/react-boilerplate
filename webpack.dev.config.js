@@ -10,6 +10,7 @@ const config     = require('./webpack.base.config')
 
 config.devtool = 'eval-source-map'
 config.entry.main.unshift(...[
+	'eventsource-polyfill', // Necessary for hot reloading with IE
 	'react-hot-loader/patch',
 	'webpack-hot-middleware/client?reload=true'
 ])
