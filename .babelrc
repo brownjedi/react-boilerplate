@@ -1,6 +1,11 @@
-// We don't use the .babelrc file for our babel configuration, preferring for
-// our webpack loaders to have full control over the babel configuration.
-// This allows us to build up our babel config in a much more dynamic fashion
-// easily targetting a mix mash of server vs browser vs dev vs prod etc.
-// @see webpack.base.config.js
-{}
+// This configuration file is only for server. For client babelrc. look into the `babel-loader`
+// query options in webpack.base.config.js
+{
+	"presets": ["es2015", "stage-0"],
+	"plugins": [
+		"transform-runtime",
+		["typecheck", { "disable": { "production": true } }],
+		"transform-object-rest-spread",
+		"transform-class-properties"
+	]
+}

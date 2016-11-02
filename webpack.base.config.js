@@ -53,7 +53,7 @@ const config = {
 	},
 	output: {
 		// The dir in which our bundle should be output.
-		path: path.resolve(__dirname, 'build'),
+		path: path.resolve(__dirname, 'build/public'),
 		publicPath: '/'
 	},
 	plugins: [
@@ -77,12 +77,7 @@ const config = {
 			fetch: 'imports?this=>global!exports?global.fetch!fetch'
 		}),
 		// Copy the apple-icons, windows-icons and favicons to the dist directory
-		new CopyWebpackPlugin([
-			// This is needed in production environment.
-			{
-				from: path.resolve(__dirname, 'server.js')
-			}
-		])
+		new CopyWebpackPlugin([])
 	],
 	module: {
 		preLoaders: [
@@ -100,6 +95,7 @@ const config = {
 				loader: 'babel',
 				exclude: [/node_modules/, path.resolve(__dirname, 'build')],
 				query: {
+					babelrc: false,
 					presets: ['react', ['es2015', { modules: false }], 'stage-0'],
 					// Using babel-runtime instead of babel-polyfill to automatically
 					// polyfill without polluting globals

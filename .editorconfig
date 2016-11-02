@@ -5,21 +5,18 @@ root = true
 
 # Unix-style newlines with a newline ending every file
 [*]
+charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 indent_style = tab
 indent_size = 4
 
 # Matches multiple files with brace expansion notation
-# Set default charset
-[*.{js,py}]
-charset = utf-8
-
 [*.{scss,sass,css}]
 indent_style = space
 indent_size = 2
 
-# Matches the exact files either package.json or .travis.yml or .eslintrc
-[{package.json,.travis.yml,.eslintrc}]
+# Matches the exact files either json or .travis.yml or .eslintrc
+[{*.json,.travis.yml,.eslintrc}]
 indent_style = space
 indent_size = 2
