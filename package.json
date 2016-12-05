@@ -8,7 +8,7 @@
     "test:watch": "npm run test -- --watch",
     "eslint": "eslint .",
     "clean": "rimraf build",
-    "build:client": "cross-env NODE_ENV=production webpack --config webpack.prod.config.js --progress --profile",
+    "build:client": "cross-env NODE_ENV=production webpack --config webpack.config.js --progress --profile",
     "build:server": "cross-env NODE_ENV=production babel src/server --out-dir build --source-maps inline --copy-files",
     "build": "npm-run-all clean --parallel build:client build:server",
     "dev": "cross-env NODE_ENV=development nodemon --watch src/server src/server --exec 'npm run eslint && node -r 'babel-register''",

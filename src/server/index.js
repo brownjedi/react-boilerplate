@@ -44,7 +44,7 @@ if (__DEV__) {
 	const webpack              = require('webpack')
 	const webpackDevMiddleware = require('webpack-dev-middleware')
 	const webpackHotMiddleware = require('webpack-hot-middleware')
-	const devConfig            = require('./../../webpack.dev.config')
+	const devConfig            = require('./../../webpack.config')
 
 	const compiler = webpack(devConfig)
 	const wdm      = webpackDevMiddleware(compiler, {
