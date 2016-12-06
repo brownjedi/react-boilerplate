@@ -12,8 +12,6 @@ const isProd = process.env.NODE_ENV === 'production'
 
 const SRC_DIR       = path.resolve(__dirname, 'src')
 const CLIENT_DIR    = path.join(SRC_DIR, 'client')
-// const ASSETS_DIR    = path.resolve(__dirname, 'src/resources')
-// const FONTS_DIR     = path.join(ASSETS_DIR, 'fonts')
 const HTML_TEMPLATE = path.resolve(__dirname, 'src/client/index.template.html')
 const MODULE_DIR    = path.resolve(__dirname, 'node_modules')
 const BUILD_DIR     = path.resolve(__dirname, 'build')

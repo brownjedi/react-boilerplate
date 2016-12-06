@@ -41,11 +41,13 @@ const promiseMiddleware = store => next => action => {
 			next(getRestOfActionWithoutPromise({
 				payload: result, type: SUCCESS
 			}))
+			return result
 		},
 		error => {
 			next(getRestOfActionWithoutPromise({
 				payload: error, type: FAILURE
 			}))
+			return error
 		}
 	)
 }
