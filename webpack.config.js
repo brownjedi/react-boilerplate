@@ -10,6 +10,18 @@ const StatsPlugin         = require('stats-webpack-plugin')
 
 const isProd = process.env.NODE_ENV === 'production'
 
+const SRC_DIR       = path.resolve(__dirname, 'src')
+const CLIENT_DIR    = path.join(SRC_DIR, 'client')
+// const ASSETS_DIR    = path.resolve(__dirname, 'src/resources')
+// const FONTS_DIR     = path.join(ASSETS_DIR, 'fonts')
+const HTML_TEMPLATE = path.resolve(__dirname, 'src/client/index.template.html')
+const MODULE_DIR    = path.resolve(__dirname, 'node_modules')
+const BUILD_DIR     = path.resolve(__dirname, 'build')
+const OUTPUT_DIR    = path.join(BUILD_DIR, 'public')
+const ENTRY_POINT   = path.join(CLIENT_DIR, 'index.js')
+
+const HTML_TITLE    = 'React Redux Template'
+
 const VENDORS = [
 	'react',
 	'react-dom',
@@ -37,7 +49,8 @@ const AUTOPREFIXER_BROWSERS = [
 
 const PLUGINS = [
 	new HtmlWebpackPlugin({
-		template: 'src/client/index.template.html',
+		template: HTML_TEMPLATE,
+		title: HTML_TITLE,
 		inject: 'body',
 		filename: 'index.html'
 	}),
@@ -48,7 +61,7 @@ const PLUGINS = [
 	}),
 	new AssetsWebpackPlugin({
 		filename: 'assets.json',
-		path: path.resolve(__dirname, 'build')
+		path: BUILD_DIR
 	}),
 	new ExtractTextPlugin({
 		filename: '[name]-[chunkhash].min.css',
@@ -110,7 +123,7 @@ const PROD_PLUGINS = [
 	new WebpackMd5Hash()
 ]
 
-const ENTRY = [path.resolve(__dirname, 'src/client/index.js')]
+const ENTRY = [ENTRY_POINT]
 
 if (!isProd) {
 	ENTRY.unshift(...[
@@ -141,7 +154,7 @@ const config = {
 		// relative paths are looked up in every parent folder (like node_modules)
 		// absolute paths are looked up directly
 		// the order is respected
-		modules: [path.resolve(__dirname, 'src'), 'node_modules']
+		modules: [SRC_DIR, MODULE_DIR]
 	},
 	entry: {
 		main: ENTRY,
@@ -155,7 +168,7 @@ const config = {
 	},
 	output: {
 		// The dir in which our bundle should be output.
-		path: path.resolve(__dirname, 'build/public'),
+		path: OUTPUT_DIR,
 		publicPath: '/',
 		// The filename format for our bundle's entries.
 		// We also want our client development builds to have a determinable
@@ -170,7 +183,7 @@ const config = {
 			{
 				test: /\.js?$/,
 				loader: 'eslint',
-				exclude: [/node_modules/, path.resolve(__dirname, 'build')]
+				exclude: [MODULE_DIR, BUILD_DIR]
 			}
 		],
 		loaders: [
@@ -178,7 +191,7 @@ const config = {
 			{
 				test: /\.js$/,
 				loader: 'babel',
-				exclude: [/node_modules/, path.resolve(__dirname, 'build')],
+				exclude: [MODULE_DIR, BUILD_DIR],
 				query: {
 					babelrc: false,
 					presets: ['react', ['es2015', { modules: false }], 'stage-0'],

@@ -16,10 +16,11 @@ import {
 
 import apiRoutes   from './routes/apiRoutes'
 
-const app     = express()
-const port    = process.env.VCAP_APP_PORT || process.env.PORT || 3000
-const host    = process.env.VCAP_APP_HOST || process.env.HOST || 'localhost'
-const __DEV__ = process.env.NODE_ENV === 'development' // eslint-disable-line
+const app        = express()
+const port       = process.env.VCAP_APP_PORT || process.env.PORT || 3000
+const host       = process.env.VCAP_APP_HOST || process.env.HOST || 'localhost'
+const __DEV__    = process.env.NODE_ENV === 'development' // eslint-disable-line
+const FORCE_SSL  = process.env.FORCE_SSL === 'true'
 
 // Response compression.
 app.use(compression({ level: 9 }))
@@ -76,6 +77,17 @@ if (__DEV__) {
 		return next()
 	})
 } else {
+	// Force HTTPs if FORCE_SSL env var is set to 'true'
+	if (FORCE_SSL) {
+		app.enable('trust proxy')
+		app.use((req, res, next) => {
+			if (req.secure) {
+				return next()
+			}
+			return res.redirect(`https://${req.headers.host}${req.url}`)
+		})
+	}
+
 	// In production this file gets copied into the build directory. So all the files/resources are in
 	// the same directory
 	app.use(express.static(path.join(__dirname, 'public')))
