@@ -18,7 +18,7 @@ export function lazyLoadComponents(lazyModules) {
 		const moduleKeys = Object.keys(lazyModules)
 		const promises = moduleKeys.map(key => lazyModules[key])
 		Promise.all(promises)
-			.then(modules => {
+			.then((modules) => {
 				cb(null, modules.reduce((acc, module, i) =>
 					Object.assign({}, acc, {
 						[moduleKeys[i]]: module.default

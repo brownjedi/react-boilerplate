@@ -7,7 +7,7 @@ function isPromise(obj) {
 		&& typeof obj.then === 'function'
 }
 
-const promiseMiddleware = store => next => action => {
+const promiseMiddleware = store => next => (action) => {
 	const promiseAPI = action[PROMISE]
 
 	if (typeof promiseAPI === 'undefined') {
@@ -37,13 +37,13 @@ const promiseMiddleware = store => next => action => {
 	const [REQUEST, SUCCESS, FAILURE] = types
 	next(getRestOfActionWithoutPromise({ type: REQUEST }))
 	return promise.then(
-		result => {
+		(result) => {
 			next(getRestOfActionWithoutPromise({
 				payload: result, type: SUCCESS
 			}))
 			return result
 		},
-		error => {
+		(error) => {
 			next(getRestOfActionWithoutPromise({
 				payload: error, type: FAILURE
 			}))

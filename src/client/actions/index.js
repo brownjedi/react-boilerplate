@@ -16,13 +16,13 @@ export function decrementCounter() {
 }
 
 export function incrementCounterAsync() {
-	return dispatch => {
+	return (dispatch) => {
 		setTimeout(() => dispatch(incrementCounter()), 1000)
 	}
 }
 
 export function decrementCounterAsync() {
-	return dispatch => {
+	return (dispatch) => {
 		setTimeout(() => dispatch(decrementCounter()), 1000)
 	}
 }

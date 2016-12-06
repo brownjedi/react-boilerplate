@@ -1,4 +1,4 @@
-/* eslint no-console: 0, global-require: 0 */
+/* eslint no-console: 0, global-require: 0 import/first: 0 */
 // Import polyfills
 import './utils/polyfills'
 
@@ -105,7 +105,7 @@ app.use(notFoundMiddleware)
 // Error Handler
 app.use(errorHandlerMiddleware)
 
-const server = app.listen(port, host, err => {
+const server = app.listen(port, host, (err) => {
 	if (err) {
 		console.log(err)
 		return

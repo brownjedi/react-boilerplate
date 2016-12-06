@@ -1,4 +1,4 @@
-/* eslint global-require: 0 */
+/* eslint global-require: 0 import/no-webpack-loader-syntax: 0 */
 import React                 from 'react'
 import { Route, IndexRoute } from 'react-router'
 import { lazyLoadComponent } from 'client/utils/lazy-loading'
