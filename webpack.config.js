@@ -7,6 +7,7 @@ const autoprefixer        = require('autoprefixer')
 const ExtractTextPlugin   = require('extract-text-webpack-plugin')
 const WebpackMd5Hash      = require('webpack-md5-hash')
 const StatsPlugin         = require('stats-webpack-plugin')
+const HappyPack           = require('happypack')
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -45,7 +46,45 @@ const AUTOPREFIXER_BROWSERS = [
 	'Safari >= 7.1'
 ]
 
+const ENTRY = [ENTRY_POINT]
+
+if (!isProd) {
+	ENTRY.unshift(...[
+		'eventsource-polyfill', // Necessary for hot reloading with IE
+		'react-hot-loader/patch',
+		'webpack-hot-middleware/client?reload=true'
+	])
+}
+
+const BABEL_PLUGINS = [
+	'transform-runtime',
+	['typecheck', { disable: { production: true } }],
+	'transform-object-rest-spread',
+	'transform-class-properties'
+]
+
+if (!isProd) {
+	BABEL_PLUGINS.unshift('react-hot-loader/babel')
+}
+
 const PLUGINS = [
+	new HappyPack({
+		loaders: [
+			{
+				path: 'babel',
+				query: {
+					babelrc: false,
+					presets: ['react', ['es2015', { modules: false }], 'stage-0'],
+					// Using babel-runtime instead of babel-polyfill to automatically
+					// polyfill without polluting globals
+					// @see https://medium.com/@jcse/clearing-up-the-babel-6-ecosystem-c7678a314bf3
+					plugins: BABEL_PLUGINS
+				}
+			}
+		],
+		threads: 4,
+		id: 'js'
+	}),
 	new HtmlWebpackPlugin({
 		template: HTML_TEMPLATE,
 		title: HTML_TITLE,
@@ -121,27 +160,6 @@ const PROD_PLUGINS = [
 	new WebpackMd5Hash()
 ]
 
-const ENTRY = [ENTRY_POINT]
-
-if (!isProd) {
-	ENTRY.unshift(...[
-		'eventsource-polyfill', // Necessary for hot reloading with IE
-		'react-hot-loader/patch',
-		'webpack-hot-middleware/client?reload=true'
-	])
-}
-
-const BABEL_PLUGINS = [
-	'transform-runtime',
-	['typecheck', { disable: { production: true } }],
-	'transform-object-rest-spread',
-	'transform-class-properties'
-]
-
-if (!isProd) {
-	BABEL_PLUGINS.unshift('react-hot-loader/babel')
-}
-
 const config = {
 	target: 'web',
 	devtool: !isProd ? 'eval-source-map' : 'cheap-module-source-map',
@@ -185,19 +203,11 @@ const config = {
 			}
 		],
 		loaders: [
-			// Javascript Loader
+			// Javascript Loader (via HappyPack to speed up the execution)
 			{
 				test: /\.js$/,
-				loader: 'babel',
-				exclude: [MODULE_DIR, BUILD_DIR],
-				query: {
-					babelrc: false,
-					presets: ['react', ['es2015', { modules: false }], 'stage-0'],
-					// Using babel-runtime instead of babel-polyfill to automatically
-					// polyfill without polluting globals
-					// @see https://medium.com/@jcse/clearing-up-the-babel-6-ecosystem-c7678a314bf3
-					plugins: BABEL_PLUGINS
-				}
+				loader: 'happypack/loader?id=js',
+				exclude: [MODULE_DIR, BUILD_DIR]
 			},
 			// JSON Loader
 			{

@@ -56,6 +56,7 @@
     "exports-loader": "^0.6.3",
     "extract-text-webpack-plugin": "^2.0.0-beta.3",
     "file-loader": "^0.9.0",
+    "happypack": "^3.0.1",
     "html-webpack-plugin": "^2.22.0",
     "imports-loader": "^0.6.5",
     "jsdom": "^9.4.1",
