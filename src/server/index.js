@@ -1,4 +1,6 @@
 /* eslint no-console: 0, global-require: 0 import/first: 0 */
+// Import envVars
+import './utils/envVars'
 // Import polyfills
 import './utils/polyfills'
 

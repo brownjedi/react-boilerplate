@@ -44,3 +44,4 @@ jspm_packages
 build
 .happypack
 .tern-project
+.env
