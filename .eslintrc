@@ -1,6 +1,9 @@
 {
   "parser": "babel-eslint",
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:ava/recommended"
+  ],
   "env": {
     "browser": true,
     "es6": true,
@@ -13,7 +16,8 @@
   "ecmaFeatures": {
     "defaultParams": true,
     "jsx": true,
-    "modules": true
+    "modules": true,
+    "es6": true
   },
   "rules": {
     "no-multi-spaces": [2, {
@@ -41,6 +45,7 @@
     "import/extensions": [0]
   },
   "plugins": [
-    "react"
+    "react",
+    "ava"
   ]
 }

@@ -45,3 +45,5 @@ build
 .happypack
 .tern-project
 .env
+coverage/
+.nyc_output/

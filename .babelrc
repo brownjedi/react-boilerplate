@@ -1,11 +1,18 @@
 // This configuration file is only for server. For client babelrc. look into the `babel-loader`
 // query options in webpack.config.js
 {
-	"presets": ["es2015", "stage-0"],
+	"presets": ["es2015", "stage-0", "react"],
 	"plugins": [
 		"transform-runtime",
 		["typecheck", { "disable": { "production": true } }],
 		"transform-object-rest-spread",
 		"transform-class-properties"
-	]
+	],
+	"env": {
+		"test": {
+			"comments": true,
+			"sourceMaps": "inline",
+			"plugins": ["istanbul"]
+		}
+	}
 }
