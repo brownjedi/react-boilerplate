@@ -1,7 +1,7 @@
 {
   "name": "react-boilerplate",
-  "version": "0.0.5",
-  "description": "",
+  "version": "0.1.0",
+  "description": "React Redux Template",
   "main": "build/index.js",
   "scripts": {
     "test": "npm run eslint && cross-env NODE_ENV=test node_modules/.bin/nyc --all node --harmony-proxies node_modules/.bin/ava --verbose",
@@ -115,6 +115,7 @@
     "nyc": "^10.0.0",
     "postcss-loader": "^1.2.0",
     "promise-loader": "^1.0.0",
+    "react-addons-test-utils": "^15.4.1",
     "react-hot-loader": "^3.0.0-beta.2",
     "redux-ava": "^2.2.0",
     "redux-devtools": "^3.3.1",

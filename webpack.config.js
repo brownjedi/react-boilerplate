@@ -9,6 +9,8 @@ const WebpackMd5Hash      = require('webpack-md5-hash')
 const StatsPlugin         = require('stats-webpack-plugin')
 const HappyPack           = require('happypack')
 
+const pkg                 = require('./package.json')
+
 const isProd = process.env.NODE_ENV === 'production'
 
 const SRC_DIR       = path.resolve(__dirname, 'src')
@@ -19,7 +21,7 @@ const BUILD_DIR     = path.resolve(__dirname, 'build')
 const OUTPUT_DIR    = path.join(BUILD_DIR, 'public')
 const ENTRY_POINT   = path.join(CLIENT_DIR, 'index.js')
 
-const HTML_TITLE    = 'React Redux Template'
+const HTML_TITLE    = pkg.description || ''
 
 const VENDORS = [
 	'react',
