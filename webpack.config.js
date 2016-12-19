@@ -15,7 +15,7 @@ const isProd = process.env.NODE_ENV === 'production'
 
 const SRC_DIR       = path.resolve(__dirname, 'src')
 const CLIENT_DIR    = path.join(SRC_DIR, 'client')
-const HTML_TEMPLATE = path.resolve(__dirname, 'src/client/index.template.html')
+const HTML_TEMPLATE     = path.resolve(__dirname, 'src/client/default.template.ejs')
 const MODULE_DIR    = path.resolve(__dirname, 'node_modules')
 const BUILD_DIR     = path.resolve(__dirname, 'build')
 const OUTPUT_DIR    = path.join(BUILD_DIR, 'public')
@@ -30,6 +30,7 @@ const VENDORS = [
 	'react-helmet',
 	'react-redux',
 	'react-router-redux',
+	'react-router',
 	'redux',
 	'redux-thunk',
 	'fastclick',
@@ -52,6 +53,12 @@ const ENTRY = [ENTRY_POINT]
 
 if (!isProd) {
 	ENTRY.unshift(...[
+		'eventsource-polyfill', // Necessary for hot reloading with IE
+		'react-hot-loader/patch',
+		'webpack-hot-middleware/client?reload=true'
+	])
+
+	VENDORS.unshift(...[
 		'eventsource-polyfill', // Necessary for hot reloading with IE
 		'react-hot-loader/patch',
 		'webpack-hot-middleware/client?reload=true'
@@ -91,16 +98,12 @@ const PLUGINS = [
 		template: HTML_TEMPLATE,
 		title: HTML_TITLE,
 		inject: 'body',
-		filename: 'index.html'
+		filename: 'views/index.ejs'
 	}),
 	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.optimize.CommonsChunkPlugin({
 		name: 'vendor',
 		minChunks: Infinity
-	}),
-	new AssetsWebpackPlugin({
-		filename: 'assets.json',
-		path: BUILD_DIR
 	}),
 	new ExtractTextPlugin({
 		filename: '[name]-[chunkhash].min.css',
@@ -154,6 +157,10 @@ const PROD_PLUGINS = [
 		source: false,
 		modules: false
 	}),
+	new AssetsWebpackPlugin({
+		filename: 'assets.json',
+		path: BUILD_DIR
+	}),
 	// We use this so that our generated [chunkhash]'s are only different if
 	// the content for our respective chunks have changed.  This optimises
 	// our long term browser caching strategy for our client bundle, avoiding
@@ -179,10 +186,7 @@ const config = {
 		// We create a seperate chunk containing our vendor modules. This can
 		// avoid unnecessary downloads by users as well as speed up development
 		// rebuild times by not having to rebundle everything with every change.
-
-		// Avoid adding react-router to vendor in dev mode as the react hot load
-		// doesn't work when its added as a vendor. You can add this in production
-		vendor: VENDORS.concat(isProd ? 'react-router' : [])
+		vendor: VENDORS
 	},
 	output: {
 		// The dir in which our bundle should be output.

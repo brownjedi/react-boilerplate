@@ -10,7 +10,9 @@ import bodyParser  from 'body-parser'
 import morgan      from 'morgan'
 import hpp         from 'hpp'
 import compression from 'compression'
-
+import ejs         from 'ejs'
+import fs          from 'fs'
+import appRoot     from 'app-root-dir'
 import {
 	notFoundMiddleware,
 	errorHandlerMiddleware
@@ -22,7 +24,12 @@ const app        = express()
 const port       = process.env.VCAP_APP_PORT || process.env.PORT || 3000
 const host       = process.env.VCAP_APP_HOST || process.env.HOST || 'localhost'
 const __DEV__    = process.env.NODE_ENV === 'development' // eslint-disable-line
+const __PROD__   = process.env.NODE_ENV === 'production' // eslint-disable-line
 const FORCE_SSL  = process.env.FORCE_SSL === 'true'
+const appRootDir = appRoot.get()
+const publicPath = path.resolve(appRootDir, 'build', 'public')
+const viewsPath  = path.resolve(publicPath, 'views')
+let fileSystem
 
 // Response compression.
 app.use(compression({ level: 9 }))
@@ -70,14 +77,7 @@ if (__DEV__) {
 	// compiler.watch({}, () => {})
 	app.use(wdm)
 	app.use(webpackHotMiddleware(compiler))
-	app.use(express.static(devConfig.output.path))
-	app.get('*', (req, res, next) => {
-		if (req.accepts('html')) {
-			res.write(wdm.fileSystem.readFileSync(path.resolve(devConfig.output.path, 'index.html')))
-			return res.end()
-		}
-		return next()
-	})
+	fileSystem = wdm.fileSystem
 } else {
 	// Force HTTPs if FORCE_SSL env var is set to 'true'
 	if (FORCE_SSL) {
@@ -89,17 +89,25 @@ if (__DEV__) {
 			return res.redirect(`https://${req.headers.host}${req.url}`)
 		})
 	}
-
-	// In production this file gets copied into the build directory. So all the files/resources are in
-	// the same directory
-	app.use(express.static(path.join(__dirname, 'public')))
-	app.get('*', (req, res, next) => {
-		if (req.accepts('html')) {
-			return res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
-		}
-		return next()
-	})
+	fileSystem = fs
 }
+
+// Utility function to Render HTML (dev and prod uses different filesystems)
+function renderHtml(template, data = {}) {
+	const doc = fileSystem.readFileSync(path.resolve(viewsPath, template), 'utf8')
+	return ejs.render(doc, data)
+}
+
+// Expose Public folder
+app.use(express.static(publicPath))
+
+// Index Route
+app.get('*', (req, res, next) => {
+	if (req.accepts('html')) {
+		return res.send(renderHtml('index.ejs'))
+	}
+	return next()
+})
 
 // 404 Handler
 app.use(notFoundMiddleware)
