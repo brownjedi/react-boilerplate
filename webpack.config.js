@@ -3,7 +3,6 @@ const webpack             = require('webpack')
 const HtmlWebpackPlugin   = require('html-webpack-plugin')
 const AssetsWebpackPlugin = require('assets-webpack-plugin')
 const CopyWebpackPlugin   = require('copy-webpack-plugin')
-const autoprefixer        = require('autoprefixer')
 const ExtractTextPlugin   = require('extract-text-webpack-plugin')
 const WebpackMd5Hash      = require('webpack-md5-hash')
 const StatsPlugin         = require('stats-webpack-plugin')
@@ -18,7 +17,7 @@ const CLIENT_DIR    = path.join(SRC_DIR, 'client')
 const HTML_TEMPLATE     = path.resolve(__dirname, 'src/client/default.template.ejs')
 const MODULE_DIR    = path.resolve(__dirname, 'node_modules')
 const BUILD_DIR     = path.resolve(__dirname, 'build')
-const OUTPUT_DIR    = path.join(BUILD_DIR, 'public')
+const OUTPUT_DIR    = path.join(BUILD_DIR, 'client')
 const ENTRY_POINT   = path.join(CLIENT_DIR, 'index.js')
 
 const HTML_TITLE    = pkg.description || ''
@@ -36,17 +35,6 @@ const VENDORS = [
 	'fastclick',
 	'es6-promise',
 	'whatwg-fetch'
-]
-
-const AUTOPREFIXER_BROWSERS = [
-	'Android 2.3',
-	'Android >= 4',
-	'Chrome >= 35',
-	'Firefox >= 31',
-	'Explorer >= 9',
-	'iOS >= 7',
-	'Opera >= 12',
-	'Safari >= 7.1'
 ]
 
 const ENTRY = [ENTRY_POINT]
@@ -67,7 +55,6 @@ if (!isProd) {
 
 const BABEL_PLUGINS = [
 	'transform-runtime',
-	['typecheck', { disable: { production: true } }],
 	'transform-object-rest-spread',
 	'transform-class-properties'
 ]
@@ -80,7 +67,7 @@ const PLUGINS = [
 	new HappyPack({
 		loaders: [
 			{
-				path: 'babel',
+				path: 'babel-loader',
 				query: {
 					babelrc: false,
 					presets: ['react', ['es2015', { modules: false }], 'stage-0'],
@@ -100,7 +87,6 @@ const PLUGINS = [
 		inject: 'body',
 		filename: 'views/index.ejs'
 	}),
-	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.optimize.CommonsChunkPlugin({
 		name: 'vendor',
 		minChunks: Infinity
@@ -112,8 +98,8 @@ const PLUGINS = [
 	}),
 	// Polyfill Promise and fetch for older browsers
 	new webpack.ProvidePlugin({
-		Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
-		fetch: 'imports?this=>global!exports?global.fetch!fetch'
+		Promise: 'imports-loader?this=>global!exports-loader?global.Promise!es6-promise',
+		fetch: 'imports-loader?this=>global!exports-loader?global.fetch!fetch'
 	}),
 	// Copy the apple-icons, windows-icons and favicons to the dist directory
 	new CopyWebpackPlugin([]),
@@ -121,7 +107,8 @@ const PLUGINS = [
 		'process.env': {
 			NODE_ENV: JSON.stringify(isProd ? 'production' : 'development')
 		},
-		__DEV__: !isProd
+		__DEV__: !isProd,
+		__PROD__: isProd
 	}),
 	// Adds options to all of our loaders.
 	// The 'debug' property was removed in webpack 2.
@@ -142,15 +129,16 @@ const DEV_PLUGINS = [
 	new webpack.HotModuleReplacementPlugin(),
 	// We don't want webpack errors to occur during development as it will
 	// kill our dev servers.
-	new webpack.NoErrorsPlugin()
+	new webpack.NoEmitOnErrorsPlugin()
 ]
 
 const PROD_PLUGINS = [
 	// JS Minification.
 	new webpack.optimize.UglifyJsPlugin({
+		sourceMap: true,
 		compressor: {
 			warnings: false,
-			screw_ie8: true
+			screw_ie8: true // React doesn't support IE-8
 		}
 	}),
 	new StatsPlugin('webpack.stats.json', {
@@ -174,7 +162,7 @@ const config = {
 	devtool: !isProd ? 'eval-source-map' : 'cheap-module-source-map',
 	resolve: {
 		// These extensions are tried when resolving a file.
-		extensions: ['', '.js', '.jsx'],
+		extensions: ['.js', '.jsx', '*'],
 		// In which folders the resolver look for modules
 		// relative paths are looked up in every parent folder (like node_modules)
 		// absolute paths are looked up directly
@@ -199,68 +187,77 @@ const config = {
 		chunkFilename: !isProd ? '[name]-[chunkhash].js' : '[name]-[chunkhash].min.js'
 	},
 	plugins: PLUGINS.concat(isProd ? PROD_PLUGINS : DEV_PLUGINS),
+	stats: {
+		colors: true,
+		hash: false,
+		timings: true,
+		chunks: false,
+		chunkModules: false,
+		modules: false,
+		children: false,
+		maxModules: 0
+	},
 	module: {
-		preLoaders: [
+		rules: [
 			// eslint
 			{
 				test: /\.js?$/,
-				loader: 'eslint',
+				enforce: 'pre',
+				loader: 'eslint-loader',
+				options: {
+					failOnWarning: false,
+					failOnError: true,
+					configFile: './.eslintrc'
+				},
 				exclude: [MODULE_DIR, BUILD_DIR]
-			}
-		],
-		loaders: [
+			},
 			// Javascript Loader (via HappyPack to speed up the execution)
 			{
 				test: /\.js$/,
 				loader: 'happypack/loader?id=js',
 				exclude: [MODULE_DIR, BUILD_DIR]
 			},
-			// JSON Loader
-			{
-				test: /\.json?$/,
-				loader: 'json'
-			},
 			// URL Loader (Images Definitions)
 			// Any file with a byte smaller than this will be "inlined" via
             // a base64 representation.
 			{
 				test: /\.(jpg|jpeg|png|gif|ico)$/,
-				loader: 'url?limit=10000'
+				loader: 'url-loader?limit=10000'
 			},
 			// Font Definitions
 			{
 				test: /\.svg$/,
-				loader: 'url?limit=65000&mimetype=image/svg+xml'
+				loader: 'url-loader?limit=65000&mimetype=image/svg+xml'
 			}, {
 				test: /\.woff$/,
-				loader: 'url?limit=65000&mimetype=application/font-woff'
+				loader: 'url-loader?limit=65000&mimetype=application/font-woff'
 			}, {
 				test: /\.woff2$/,
-				loader: 'url?limit=65000&mimetype=application/font-woff2'
+				loader: 'url-loader?limit=65000&mimetype=application/font-woff2'
 			}, {
 				test: /\.[ot]tf$/,
-				loader: 'url?limit=65000&mimetype=application/octet-stream'
+				loader: 'url-loader?limit=65000&mimetype=application/octet-stream'
 			}, {
 				test: /\.eot$/,
-				loader: 'url?limit=65000&mimetype=application/vnd.ms-fontobject'
+				loader: 'url-loader?limit=65000&mimetype=application/vnd.ms-fontobject'
 			},
 			// File Loader
 			{
 				test: /\.(wav|mp3)$/,
-				loader: 'file'
+				loader: 'file-loader'
 			}, {
 				test: /\.global\.css$/,
 				loader: ExtractTextPlugin.extract({
-					fallbackLoader: 'style',
-					loader: [`css?sourceMap=${!isProd}`, `postcss?sourceMap=${!isProd ? 'inline' : false}`]
+					fallback: 'style-loader',
+					use: [`css-loader?sourceMap=${!isProd}`, `postcss-loader?sourceMap=${!isProd ? 'inline' : false}`]
 				})
 			}, {
 				test: /^((?!\.global).)*\.css$/,
 				loader: ExtractTextPlugin.extract({
-					fallbackLoader: 'style',
-					loader: [
+					fallback: 'style-loader',
+					use: [
 						{
-							loader: 'css',
+							loader: 'css-loader',
 							query: {
 								modules: true,
 								sourceMap: !isProd,
@@ -268,7 +265,7 @@ const config = {
 								localIdentName: '[name]---[local]---[hash:base64:5]'
 							}
 						},
-						`postcss?sourceMap=${!isProd ? 'inline' : false}`
+						`postcss-loader?sourceMap=${!isProd ? 'inline' : false}`
 					]
 				})
 			},
@@ -276,25 +273,25 @@ const config = {
 			{
 				test: /\.global\.(scss|sass)$/,
 				loader: ExtractTextPlugin.extract({
-					fallbackLoader: 'style',
+					fallback: 'style-loader',
 					// resolve-url-loader needs source maps from  preceding loaders and
 					// resolves relative paths in url() statements based on the original source file.
-					loader: [
-						`css?sourceMap=${!isProd}`,
-						`postcss?sourceMap=${!isProd ? 'inline' : false}`,
-						'resolve-url',
+					use: [
+						`css-loader?sourceMap=${!isProd}`,
+						`postcss-loader?sourceMap=${!isProd ? 'inline' : false}`,
+						'resolve-url-loader',
 						// resolve-url-loader needs source maps from  preceding loaders and
 						// resolves relative paths in url() statements based on the original source file.
-						`sass?sourceMap&sourceMapContents=${!isProd}`
+						`sass-loader?sourceMap&sourceMapContents=${!isProd}`
 					]
 				})
 			}, {
 				test: /^((?!\.global).)*\.(scss|sass)$/,
 				loader: ExtractTextPlugin.extract({
-					fallbackLoader: 'style',
-					loader: [
+					fallback: 'style-loader',
+					use: [
 						{
-							loader: 'css',
+							loader: 'css-loader',
 							query: {
 								modules: true,
 								importLoaders: 1,
@@ -302,23 +299,16 @@ const config = {
 								localIdentName: '[name]---[local]---[hash:base64:5]'
 							}
 						},
-						`postcss?sourceMap=${!isProd ? 'inline' : false}`,
-						'resolve-url',
+						`postcss-loader?sourceMap=${!isProd ? 'inline' : false}`,
+						'resolve-url-loader',
 						// resolve-url-loader needs source maps from  preceding loaders and
 						// resolves relative paths in url() statements based on the original source file.
-						`sass?sourceMap&sourceMapContents=${!isProd}`
+						`sass-loader?sourceMap&sourceMapContents=${!isProd}`
 					]
 				})
 			}
 		]
-	},
-	eslint: {
-		failOnWarning: false,
-		failOnError: true,
-		configFile: './.eslintrc'
-	},
-
-	postcss: [autoprefixer({ browsers: AUTOPREFIXER_BROWSERS })]
+	}
 }
 
 module.exports = config

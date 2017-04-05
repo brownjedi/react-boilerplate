@@ -1,8 +1,15 @@
 /* eslint no-console: 0, global-require: 0 import/first: 0 */
 // Import envVars
-import './utils/envVars'
+import '~/server/utils/envVars'
 // Import polyfills
-import './utils/polyfills'
+import '~/server/utils/polyfills'
+
+import {
+	__TEST__,
+	__DEV__,
+	PORT,
+	FORCE_SSL
+}                       from '~/server/config'
 
 import path        from 'path'
 import express     from 'express'
@@ -16,20 +23,18 @@ import appRoot     from 'app-root-dir'
 import {
 	notFoundMiddleware,
 	errorHandlerMiddleware
-}                  from './middlewares'
+}                  from '~/server/middlewares'
 
-import apiRoutes   from './routes/apiRoutes'
+import apiRoutes   from '~/server/routes/apiRoutes'
 
 const app        = express()
-const port       = process.env.VCAP_APP_PORT || process.env.PORT || 3000
-const host       = process.env.VCAP_APP_HOST || process.env.HOST || 'localhost'
-const __DEV__    = process.env.NODE_ENV === 'development' // eslint-disable-line
-const __PROD__   = process.env.NODE_ENV === 'production' // eslint-disable-line
-const FORCE_SSL  = process.env.FORCE_SSL === 'true'
 const appRootDir = appRoot.get()
-const publicPath = path.resolve(appRootDir, 'build', 'public')
+const publicPath = path.resolve(appRootDir, 'build', 'client')
 const viewsPath  = path.resolve(publicPath, 'views')
 let fileSystem
+
+// Don't expose any software information to hackers.
+app.disable('x-powered-by')
 
 // Response compression.
 app.use(compression({ level: 9 }))
@@ -38,14 +43,14 @@ app.use(compression({ level: 9 }))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-// Enable logging
-app.use(morgan('dev'))
-
-// Don't expose any software information to hackers.
-app.disable('x-powered-by')
-
 // Prevent HTTP Parameter pollution.
 app.use(hpp())
+
+// Enable logging
+if (!__TEST__) {
+	// Enable logging
+	app.use(morgan('dev'))
+}
 
 // routes
 app.use('/api', apiRoutes)
@@ -115,12 +120,15 @@ app.use(notFoundMiddleware)
 // Error Handler
 app.use(errorHandlerMiddleware)
 
-const server = app.listen(port, host, (err) => {
-	if (err) {
-		console.log(err)
-		return
-	}
-	console.log(`===> 🌎  Express Server started on http://${host}:${port}`)
-})
+if (!module.parent) {
+	// Start the server
+	app.listen(PORT, (err) => {
+		if (err) {
+			console.log(err)
+			return
+		}
+		console.log('===> 🌎  Express Server started')
+	})
+}
 
-export default server
+export default app

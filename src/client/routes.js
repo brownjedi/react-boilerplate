@@ -8,9 +8,9 @@ import App                   from 'client/containers/pages/App'
 
 // Lazy Load the Paths (Do this to do code-splitting so that the pages javascript
 // chunk only gets loaded if the url is accessed)
-import Home                  from 'promise?global!client/containers/pages/Home'
-import About                 from 'promise?global!client/containers/pages/About'
-import NotFound              from 'promise?global!client/containers/pages/NotFound'
+import Home                  from 'promise-loader?global!client/containers/pages/Home'
+import About                 from 'promise-loader?global!client/containers/pages/About'
+import NotFound              from 'promise-loader?global!client/containers/pages/NotFound'
 
 // This is required to do for all async routes during development to ensure react-hot-reload
 // works

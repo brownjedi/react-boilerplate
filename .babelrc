@@ -3,8 +3,11 @@
 {
 	"presets": ["es2015", "stage-0", "react"],
 	"plugins": [
+		["babel-root-import", {
+			"rootPathSuffix": "src",
+			"rootPathPrefix": "~"
+		}],
 		"transform-runtime",
-		["typecheck", { "disable": { "production": true } }],
 		"transform-object-rest-spread",
 		"transform-class-properties"
 	],
@@ -12,7 +15,13 @@
 		"test": {
 			"comments": true,
 			"sourceMaps": "inline",
-			"plugins": ["istanbul"]
+			"plugins": ["istanbul", [
+				"babel-plugin-webpack-loaders",
+				{
+					"config": "webpack.config.ava.js",
+					"verbose": false
+				}
+			]]
 		}
 	}
 }
