@@ -1,5 +1,7 @@
 # react-boilerplate
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/saikarthikreddyginni/react-boilerplate.svg)](https://greenkeeper.io/)
+
 React Redux Boilerplate
 
 ## Requirements
